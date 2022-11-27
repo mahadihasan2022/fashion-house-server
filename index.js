@@ -1,87 +1,132 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const ObjectId = require('mongodb').ObjectId;
+const cors = require("cors");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const ObjectId = require("mongodb").ObjectId;
 const port = process.env.PORT || 5000;
-require('dotenv').config()
+require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.h8k01.mongodb.net/?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+});
 
 async function run() {
-    try {
-        const database = client.db("fashionHouse");
-        const usersCollection = database.collection("users");
-           app.get('/user', async (req, res) => {
-            const getUserEmail = req?.query?.email;
-            if (getUserEmail) {
-                const query = { email: getUserEmail };
-                const user = await usersCollection.findOne(query);
-                res.json(user);
-            }
-            else {
-                const cursor = usersCollection.find({});
-                const users = await cursor.toArray();
-                res.json(users);
-            }
-        });
-        
-        app.put('/user', async (req, res) => {
-            const addUser = req.query.addUser;
-            const addFriends = req.query.addFriends;
-            const options = { upsert: true };
-            if (addUser) {
-                const newUsers = req.body;
-                const filter = { email: addUser };
-                const updateDoc = {
-                    $set: { name: newUsers?.name, email: newUsers?.email, img: newUsers?.img },
-                };
-                const result = await usersCollection.updateOne(filter, updateDoc, options);
-                // console.log(result)
-                res.send(result)
-            }
-            if (addFriends) {
-                const newFriends = req.body;
-                // console.log(newFriends)
-                const filter = { email: addFriends };
-                const updateDoc = {
-                    $set: { friends: newFriends },
-                };
-                const result = await usersCollection.updateOne(filter, updateDoc, options);
-                // console.log(result)
-                res.send(result)
-            }
-        })
+  try {
+    const database = client.db("fashionHouse");
+    const usersCollection = database.collection("users");
+    const productsCollection = database.collection("Products");
+    
+    app.get("/products", async (req, res) => {
+        const query = {};
+        const cursor = productsCollection.find(query);
+        const products = await cursor.toArray();
+        res.json(products);
+      });
+      app.get("/products/:id", async (req, res) => {
+        const category = req.params.id;
+        const query = { category };
+        const cursor = productsCollection.find(query);
+        const product = await cursor.toArray();
+        res.json(product);
+      });
+      app.get("/product/:id", async (req, res) => {
+        const brand = req.params.id;
+        const query = { brand };
+        const cursor = productsCollection.find(query);
+        const product = await cursor.toArray();
+        res.json(product);
+      });
+    
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    app.get("/user", async (req, res) => {
+      const getUserEmail = req?.query?.email;
+      if (getUserEmail) {
+        const query = { email: getUserEmail };
+        const user = await usersCollection.findOne(query);
+        res.json(user);
+      } else {
+        const cursor = usersCollection.find({});
+        const users = await cursor.toArray();
+        res.json(users);
+      }
+    });
 
-
-    } finally {
-        // await client.close();
-    }
+    app.put("/user", async (req, res) => {
+      const addUser = req.query.addUser;
+      const addFriends = req.query.addFriends;
+      const options = { upsert: true };
+      if (addUser) {
+        const newUsers = req.body;
+        const filter = { email: addUser };
+        const updateDoc = {
+          $set: {
+            name: newUsers?.name,
+            email: newUsers?.email,
+            img: newUsers?.img,
+          },
+        };
+        const result = await usersCollection.updateOne(
+          filter,
+          updateDoc,
+          options
+        );
+        // console.log(result)
+        res.send(result);
+      }
+      if (addFriends) {
+        const newFriends = req.body;
+        // console.log(newFriends)
+        const filter = { email: addFriends };
+        const updateDoc = {
+          $set: { friends: newFriends },
+        };
+        const result = await usersCollection.updateOne(
+          filter,
+          updateDoc,
+          options
+        );
+        // console.log(result)
+        res.send(result);
+      }
+    });
+  } finally {
+    // await client.close();
+  }
 }
 run().catch(console.dir);
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
 app.listen(port, () => {
-    console.log(`http://localhost:${port}`)
-})
-
-
-
-
-
-
-
-
-
-
-
+  console.log(`http://localhost:${port}`);
+});
 
 // const express = require('express');
 // const app = express();
