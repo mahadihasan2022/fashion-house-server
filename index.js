@@ -63,6 +63,13 @@ async function run() {
         const product = await cursor.toArray();
         res.json(product);
       });
+      app.get("/products/subCategory/:id", async (req, res) => {
+        const subCategory = req.params.id;
+        const query = { subCategory };
+        const cursor = productsCollection.find(query);
+        const product = await cursor.toArray();
+        res.json(product);
+      });
     
  
     
