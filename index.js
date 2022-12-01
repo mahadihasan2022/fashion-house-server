@@ -35,9 +35,30 @@ async function run() {
         const product = await cursor.toArray();
         res.json(product);
       });
-      app.get("/product/:id", async (req, res) => {
+      app.get("/products/brand/:id", async (req, res) => {
         const brand = req.params.id;
         const query = { brand };
+        const cursor = productsCollection.find(query);
+        const product = await cursor.toArray();
+        res.json(product);
+      });
+      app.get("/products/size/:id", async (req, res) => {
+        const size = req.params.id;
+        const query = { size };
+        const cursor = productsCollection.find(query);
+        const product = await cursor.toArray();
+        res.json(product);
+      });
+      app.get("/products/color/:id", async (req, res) => {
+        const color = req.params.id;
+        const query = { color };
+        const cursor = productsCollection.find(query);
+        const product = await cursor.toArray();
+        res.json(product);
+      });
+      app.get("/products/variants/:id", async (req, res) => {
+        const variants = req.params.id;
+        const query = { variants };
         const cursor = productsCollection.find(query);
         const product = await cursor.toArray();
         res.json(product);
