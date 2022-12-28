@@ -21,10 +21,17 @@ async function run() {
     const database = client.db("fashionHouse");
     const usersCollection = database.collection("users");
     const productsCollection = database.collection("Products");
+    const discountProductsCollection = database.collection("discount");
     
     app.get("/products", async (req, res) => {
         const query = {};
         const cursor = productsCollection.find(query);
+        const products = await cursor.toArray();
+        res.json(products);
+      });
+    app.get("/discountProducts", async (req, res) => {
+        const query = {};
+        const cursor = discountProductsCollection.find(query);
         const products = await cursor.toArray();
         res.json(products);
       });
