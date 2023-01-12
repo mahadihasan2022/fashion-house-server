@@ -22,6 +22,7 @@ async function run() {
     const usersCollection = database.collection("users");
     const productsCollection = database.collection("Products");
     const discountProductsCollection = database.collection("discount");
+    const newProductsCollection = database.collection("newProducts");
     
     app.get("/products", async (req, res) => {
         const query = {};
@@ -32,6 +33,12 @@ async function run() {
     app.get("/discountProducts", async (req, res) => {
         const query = {};
         const cursor = discountProductsCollection.find(query);
+        const products = await cursor.toArray();
+        res.json(products);
+      });
+    app.get("/newProducts", async (req, res) => {
+        const query = {};
+        const cursor = newProductsCollection.find(query);
         const products = await cursor.toArray();
         res.json(products);
       });
