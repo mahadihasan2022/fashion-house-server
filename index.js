@@ -20,6 +20,7 @@ async function run() {
   try {
     const database = client.db("fashionHouse");
     const usersCollection = database.collection("users");
+    const applyEmployeeCollection = database.collection("applyEmployee");
     const productsCollection = database.collection("Products");
     const discountProductsCollection = database.collection("discount");
     const newProductsCollection = database.collection("newProducts");
@@ -100,9 +101,24 @@ async function run() {
     
     
     
+      app.get("/applyEmployee/:email", async (req, res) => {
+        const email = req.params.email;
+        const query = { email };
+        const user = await applyEmployeeCollection.findOne(query);
+        res.send(user);
+      });
     
-    
-    
+      app.put("/applyEmployee/:email", async (req, res) => {
+        const email = req.params.email;
+        const user = req.body;
+        const filter = { email: email };
+        const options = { upsert: true };
+        const updateDoc = {
+          $set: user,
+        };
+        const result = await applyEmployeeCollection.updateOne(filter, updateDoc, options);
+        res.send({ result });
+      });
     
     
     app.get("/user", async (req, res) => {
