@@ -20,6 +20,7 @@ async function run() {
   try {
     const database = client.db("fashionHouse");
     const usersCollection = database.collection("users");
+    const forumCollection = database.collection("forum");
     const applyEmployeeCollection = database.collection("applyEmployee");
     const productsCollection = database.collection("Products");
     const discountProductsCollection = database.collection("discount");
@@ -101,6 +102,24 @@ async function run() {
     
     
     
+      app.get("/forum/:email", async (req, res) => {
+        const email = req.params.email;
+        const query = { email };
+        const user = await forumCollection.findOne(query);
+        res.send(user);
+      });
+    
+      app.put("/forum/:email", async (req, res) => {
+        const email = req.params.email;
+        const user = req.body;
+        const filter = { email: email };
+        const options = { upsert: true };
+        const updateDoc = {
+          $set: user,
+        };
+        const result = await forumCollection.updateOne(filter, updateDoc, options);
+        res.send({ result });
+      });
       app.get("/applyEmployee/:email", async (req, res) => {
         const email = req.params.email;
         const query = { email };
