@@ -97,11 +97,33 @@ async function run() {
     
     
     
+     app.post("/addPromotion", async (req, res) => {
+       const getPost = req.body;
+       const result = await discountProductsCollection.insertOne(getPost);
+       res.send(result);
+      });
     
     
     
     
+      // app.get("/addPromotion", async (req, res) => {
+      //   const email = req.params.email;
+      //   const query = { email };
+      //   const user = await discountProductsCollection.findOne(query);
+      //   res.send(user);
+      // });
     
+      // app.put("/addPromotion", async (req, res) => {
+      //   const email = req.params.email;
+      //   const user = req.body;
+      //   const filter = { email: email };
+      //   const options = { upsert: true };
+      //   const updateDoc = {
+      //     $set: user,
+      //   };
+      //   const result = await discountProductsCollection.updateOne(filter, updateDoc, options);
+      //   res.send({ result });
+      // });
       app.get("/forum/:email", async (req, res) => {
         const email = req.params.email;
         const query = { email };
