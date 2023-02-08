@@ -25,22 +25,16 @@ async function run() {
     const productsCollection = database.collection("Products");
     const discountProductsCollection = database.collection("discount");
     const newProductsCollection = database.collection("newProducts");
+
+
+
+  //-------------------------------
+          // Home Section
+  //-------------------------------
     
     app.get("/products", async (req, res) => {
         const query = {};
         const cursor = productsCollection.find(query);
-        const products = await cursor.toArray();
-        res.json(products);
-      });
-    app.get("/discountProducts", async (req, res) => {
-        const query = {};
-        const cursor = discountProductsCollection.find(query);
-        const products = await cursor.toArray();
-        res.json(products);
-      });
-    app.get("/newProducts", async (req, res) => {
-        const query = {};
-        const cursor = newProductsCollection.find(query);
         const products = await cursor.toArray();
         res.json(products);
       });
@@ -87,6 +81,53 @@ async function run() {
         res.json(product);
       });
     
+
+
+
+      // -----------------------------
+            // Discount Section
+      // -----------------------------
+
+
+
+      app.get("/discountProducts", async (req, res) => {
+        const query = {};
+        const cursor = discountProductsCollection.find(query);
+        const products = await cursor.toArray();
+        res.json(products);
+      });
+
+      // ------------------------------------------
+          // Add Discount Products Container
+      // ------------------------------------------
+
+     app.post("/discountProducts", async (req, res) => {
+      const getPost = req.body;
+      const result = await discountProductsCollection.insertOne(getPost);
+      res.send(result);
+     });
+
+
+
+      // -----------------------------
+           // New Products Section 
+      // -----------------------------
+    app.get("/newProducts", async (req, res) => {
+        const query = {};
+        const cursor = newProductsCollection.find(query);
+        const products = await cursor.toArray();
+        res.json(products);
+      });
+
+      // ------------------------------
+          // Add Products Container
+      // ------------------------------
+      
+     app.post("/newProducts", async (req, res) => {
+      const getPost = req.body;
+      const result = await newProductsCollection.insertOne(getPost);
+      res.send(result);
+     });
  
     
     
@@ -96,34 +137,13 @@ async function run() {
     
     
     
+
     
-     app.post("/addPromotion", async (req, res) => {
-       const getPost = req.body;
-       const result = await discountProductsCollection.insertOne(getPost);
-       res.send(result);
-      });
-    
-    
-    
-    
-      // app.get("/addPromotion", async (req, res) => {
-      //   const email = req.params.email;
-      //   const query = { email };
-      //   const user = await discountProductsCollection.findOne(query);
-      //   res.send(user);
-      // });
-    
-      // app.put("/addPromotion", async (req, res) => {
-      //   const email = req.params.email;
-      //   const user = req.body;
-      //   const filter = { email: email };
-      //   const options = { upsert: true };
-      //   const updateDoc = {
-      //     $set: user,
-      //   };
-      //   const result = await discountProductsCollection.updateOne(filter, updateDoc, options);
-      //   res.send({ result });
-      // });
+      // -------------------------------
+              // Service Section 
+      // -------------------------------
+
+
       app.get("/forum/:email", async (req, res) => {
         const email = req.params.email;
         const query = { email };
@@ -161,7 +181,11 @@ async function run() {
         res.send({ result });
       });
     
-    
+    // -----------------------------------
+          // Authentication Section
+    // -----------------------------------
+
+
     app.get("/user", async (req, res) => {
       const getUserEmail = req?.query?.email;
       if (getUserEmail) {
